@@ -1,4 +1,5 @@
-﻿using aula.Models;
+﻿using aula.Entidades;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,18 @@ namespace aula.Controllers
 {
     public class ProdutosController : Controller
     {
+        private readonly Contexto db;
+        public ProdutosController(Contexto contexto)
+        {
+            db = contexto;
+        }
 
-        public static List<Produto> lsProdutos = new List<Produto>();
+        // GET: ProdutosController
+
+
         public IActionResult Index()
         {
-            return View(lsProdutos);
+            return View(db.PRODUTOS.ToList());
         }
 
         public IActionResult Create() 
@@ -21,10 +29,50 @@ namespace aula.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Produto objeto)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Produtos collection)
         {
-            lsProdutos.Add(objeto);
+            try
+            {
+                db.PRODUTOS.Add(collection);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+
+                return View();
+            }
+        }
+   
+        public ActionResult Edit(int id)
+        {
+            return View(db.PRODUTOS.Where(a => a.Id == id).FirstOrDefault());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Produtos collection)
+        {
+            try
+            {
+                db.PRODUTOS.Update(collection);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            catch 
+            {
+                return View();
+                
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            db.PRODUTOS.Remove(db.PRODUTOS.Where(a => a.Id == id).FirstOrDefault() );
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using aula.Entidades;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace aula.Controllers
         // GET: UsuariosController
         public ActionResult Index()
         {
-            return View();
+            return View(db.USUARIOS.ToList());
         }
 
         // GET: UsuariosController/Details/5
@@ -38,10 +39,12 @@ namespace aula.Controllers
         // POST: UsuariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Usuarios collection)
         {
             try
             {
+                db.USUARIOS.Add(collection);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -53,16 +56,18 @@ namespace aula.Controllers
         // GET: UsuariosController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(db.USUARIOS.Where(a=> a.Id == id).FirstOrDefault());
         }
 
         // POST: UsuariosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Usuarios collection)
         {
             try
             {
+                db.USUARIOS.Update(collection);
+                db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -74,22 +79,11 @@ namespace aula.Controllers
         // GET: UsuariosController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            db.USUARIOS.Remove(db.USUARIOS.Where(a => a.Id == id).FirstOrDefault());
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-        // POST: UsuariosController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+
     }
 }

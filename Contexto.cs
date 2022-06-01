@@ -11,5 +11,6 @@ namespace aula
     {
         public Contexto(DbContextOptions<Contexto> options) : base(options) { }
         public DbSet<Usuarios> USUARIOS { get; set; }
+        public DbSet<Produtos> PRODUTOS { get; set; }
     }
 }

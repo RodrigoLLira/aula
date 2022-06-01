@@ -25,7 +25,7 @@ namespace aula
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<Contexto>(a => a.UseMySQL("server=localhost;database=BancoVIDEOS;user=root;password=;SslMod=nome"));
+            services.AddDbContext<Contexto>(a => a.UseMySQL("server=localhost;database=BancoVIDEOS;user=root;password=;SslMode="));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
